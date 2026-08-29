@@ -27,9 +27,13 @@ func TestValidateDiskKey(t *testing.T) {
 			key:         testDiskKey{path: ""},
 			expectedErr: true,
 		},
-		"missing leading slash": {
+		"valid key without leading slash": {
 			key:         testDiskKey{path: "kubelet/pods.v1.core/default/nginx"},
-			expectedErr: true,
+			expectedErr: false,
+		},
+		"missing leading slash but invalid GVR": {
+			key:         testDiskKey{path: "kubelet/pods/default/nginx"},
+			expectedErr: false,
 		},
 		"valid object key (enhancement mode)": {
 			key:         testDiskKey{path: "/kubelet/pods.v1.core/default/nginx"},

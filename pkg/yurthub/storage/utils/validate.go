@@ -37,16 +37,18 @@ func ValidateKey(key storage.Key, validKeyType interface{}) error {
 // ValidateDiskKey validates the internal format of a disk storage key.
 // A valid disk key has the format: /<Component>/<Resource[.Version[.Group]]>/<Namespace>/<Name>
 // or /<Component>/<Resource[.Version[.Group]]>/<Namespace> for list keys.
+// Keys without a leading slash are accepted for backward compatibility.
 func ValidateDiskKey(key storage.Key) error {
 	if key == nil || key.Key() == "" {
 		return storage.ErrKeyIsEmpty
 	}
 	path := key.Key()
-	if !strings.HasPrefix(path, "/") {
-		return storage.ErrKeyIsEmpty
+	// Strip leading slash if present
+	if strings.HasPrefix(path, "/") {
+		path = strings.TrimPrefix(path, "/")
 	}
-	// Strip leading slash and split into at most 3 parts: component, gvr, namespace/name
-	parts := strings.SplitN(strings.TrimPrefix(path, "/"), "/", 3)
+	// Split into at most 3 parts: component, gvr, namespace/name
+	parts := strings.SplitN(path, "/", 3)
 	if len(parts) < 2 {
 		return storage.ErrKeyIsEmpty
 	}
