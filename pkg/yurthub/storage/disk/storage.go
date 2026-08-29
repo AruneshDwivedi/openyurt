@@ -105,7 +105,7 @@ func (ds *diskStorage) Name() string {
 
 // Create will create a new file with content. key indicates the path of the file.
 func (ds *diskStorage) Create(key storage.Key, content []byte) error {
-	if err := utils.ValidateKey(key, storageKey{}); err != nil {
+	if err := utils.ValidateDiskKey(key); err != nil {
 		return err
 	}
 	storageKey := key.(storageKey)
@@ -134,7 +134,7 @@ func (ds *diskStorage) Create(key storage.Key, content []byte) error {
 
 // Delete will delete the file that specified by key.
 func (ds *diskStorage) Delete(key storage.Key) error {
-	if err := utils.ValidateKey(key, storageKey{}); err != nil {
+	if err := utils.ValidateDiskKey(key); err != nil {
 		return err
 	}
 	storageKey := key.(storageKey)
@@ -157,7 +157,7 @@ func (ds *diskStorage) Delete(key storage.Key) error {
 // Get will get content from the regular file that specified by key.
 // If key points to a dir, return ErrKeyHasNoContent.
 func (ds *diskStorage) Get(key storage.Key) ([]byte, error) {
-	if err := utils.ValidateKey(key, storageKey{}); err != nil {
+	if err := utils.ValidateDiskKey(key); err != nil {
 		return []byte{}, storage.ErrKeyIsEmpty
 	}
 	storageKey := key.(storageKey)
@@ -182,7 +182,7 @@ func (ds *diskStorage) Get(key storage.Key) ([]byte, error) {
 // List will get contents of all files recursively under the root dir pointed by the rootKey.
 // If the root dir of this rootKey does not exist, return ErrStorageNotFound.
 func (ds *diskStorage) List(key storage.Key) ([][]byte, error) {
-	if err := utils.ValidateKey(key, storageKey{}); err != nil {
+	if err := utils.ValidateDiskKey(key); err != nil {
 		return [][]byte{}, err
 	}
 	storageKey := key.(storageKey)
